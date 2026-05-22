@@ -71,3 +71,15 @@ src/styles.css                       デザイン
 
 本アプリは自己理解と行動整理の補助を目的としたMVPです。  
 医療・法律・投資・採用判断、未来や他者の意思の断定は行いません。
+
+## Vercel deploy note
+
+This package intentionally does not include `package-lock.json` to avoid environment-specific registry URLs. On Vercel, use:
+
+- Framework Preset: Vite
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Node.js Version: 20.x
+
+If Vercel shows `npm error Exit handler never called`, delete `package-lock.json` from the repository and redeploy with the pinned `package.json` in this version.
