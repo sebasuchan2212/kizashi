@@ -1,13 +1,83 @@
 import { useMemo, useState } from 'react';
-import { Hero } from './components/Hero';
+import {
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  ClipboardCheck,
+  Footprints,
+  Heart,
+  HelpCircle,
+  LineChart,
+  Flower2,
+  Menu,
+  MessageCircle,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  WalletCards
+} from 'lucide-react';
+import { BrandMark } from './components/BrandMark';
 import { InputForm } from './components/InputForm';
-import { Principles } from './components/Principles';
 import { ResultView } from './components/ResultView';
 import type { KizashiInput, KizashiResult } from './domain/types';
 import { mockAnalyzeKizashi } from './services/mockAnalyzeKizashi';
 
+const featureCards = [
+  {
+    icon: BookOpen,
+    title: '叙事読解エンジン',
+    body: 'あなたの言葉から物語の構造を読み解き、本質的なテーマを抽出。'
+  },
+  {
+    icon: Sparkles,
+    title: '確率シナリオ生成',
+    body: '楽観・基準・注意の3つの未来シナリオを確率帯とともに表示。'
+  },
+  {
+    icon: Scale,
+    title: '反証シグナル',
+    body: '思い込みやバイアスに気づくための視点をひとつ提案。'
+  },
+  {
+    icon: Footprints,
+    title: '行動フレーミング',
+    body: '今日からできる小さなアクションを2つに絞って提案。'
+  },
+  {
+    icon: ClipboardCheck,
+    title: '履歴と振り返り',
+    body: '過去の診断結果を保存し、変化や成長を確認できる設計。'
+  },
+  {
+    icon: ShieldCheck,
+    title: '安心・安全設計',
+    body: '高リスクな相談は通常診断を止め、支援導線へ切り替え。'
+  }
+];
+
+const promiseCards = [
+  '未来を断定しません。可能性を示すことで、あなたの選択を支えます。',
+  'いつでもやめられます。依存を前提にした設計は一切しません。',
+  '結果の美しさより、気づきと行動を何より大切にします。',
+  '個人情報は最小限。保存前提にせず、厳密に管理します。'
+];
+
+const testimonials = [
+  { age: '20代・女性', text: 'モヤモヤしていた気持ちが整理されて、前向きに行動できるようになりました。' },
+  { age: '30代・男性', text: '3つのシナリオで考えられるので、選択に自由が残っているように感じました。' },
+  { age: '20代・女性', text: '反証シグナルがあることで、むしろ信頼できると感じました。' }
+];
+
+const pricing = [
+  { name: 'Free', price: '¥0', body: '1日1回の簡易診断。まずはKIZASHIの世界観を試したい方向け。' },
+  { name: 'Light', price: '¥500', body: '詳細診断、因子カード、反証、7日間の小行動プランを想定。' },
+  { name: 'Monthly', price: '¥980〜', body: '履歴保存、週次レポート、領域別の傾向分析を想定。' }
+];
+
 function App() {
   const [result, setResult] = useState<KizashiResult | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState('Light');
   const year = useMemo(() => new Date().getFullYear(), []);
 
   const handleAnalyze = (input: KizashiInput) => {
@@ -18,21 +88,264 @@ function App() {
     });
   };
 
+  const sampleResult = useMemo(
+    () =>
+      mockAnalyzeKizashi({
+        domain: '恋愛',
+        question: '連絡頻度が減った相手との距離感をどう見ればいいか',
+        stateSummary:
+          '以前より返信が遅くなり、こちらから連絡することが増えました。嫌われたのか、ただ忙しいだけなのか判断できず、追いかけすぎるのも怖いです。',
+        timeHorizon: '1か月',
+        emotionIntensity: 3
+      }),
+    []
+  );
+
   return (
-    <div className="app-shell">
-      <Hero />
-      <main className="main-grid">
-        <div className="left-column">
-          <InputForm onSubmit={handleAnalyze} />
-          <Principles />
-        </div>
-        <div id="result-area" className="right-column">
-          <ResultView result={result} />
-        </div>
+    <div className="kizashi-site">
+      <div className="cosmic-bg" aria-hidden="true" />
+      <header className="top-nav">
+        <a href="#top" className="nav-brand" aria-label="KIZASHIトップへ">
+          <BrandMark />
+        </a>
+        <nav className="nav-links" aria-label="ページ内ナビゲーション">
+          <a href="#top">ホーム</a>
+          <a href="#about">KIZASHIとは</a>
+          <a href="#howto">使い方</a>
+          <a href="#features">機能一覧</a>
+          <a href="#pricing">料金</a>
+          <a href="#faq">よくある質問</a>
+        </nav>
+        <a className="nav-cta" href="#diagnosis">今すぐ診断する</a>
+        <button className="mobile-menu" aria-label="メニュー">
+          <Menu size={20} />
+        </button>
+      </header>
+
+      <main id="top">
+        <section className="hero-visual">
+          <div className="hero-copy-luxe">
+            <p className="hero-kicker">未来は、決まっていない。</p>
+            <h1>
+              KIZASHI
+              <span>確率叙事占学</span>
+            </h1>
+            <p className="hero-lead">
+              迷いを、3つの可能性と今日の一歩に。あなたの物語を読み解き、可能性の地図と行動のヒントを届ける自己省察型Webアプリです。
+            </p>
+            <div className="hero-buttons">
+              <a className="gold-button" href="#diagnosis">
+                無料で始める <ArrowRight size={18} />
+              </a>
+              <a className="glass-button" href="#sample">サンプルを見る</a>
+            </div>
+            <div className="trust-row">
+              <span>登録不要でお試しOK</span>
+              <span>スマホで簡単</span>
+              <span>個人情報の入力不要</span>
+            </div>
+          </div>
+
+          <div className="astro-stage" aria-label="星図デザイン">
+            <div className="orbit orbit-1" />
+            <div className="orbit orbit-2" />
+            <div className="orbit orbit-3" />
+            <div className="star-core" />
+            <div className="horizon-glow" />
+          </div>
+
+          <aside className="hero-side-cards" aria-label="KIZASHIの特徴">
+            <div>
+              <LineChart size={26} />
+              <strong>不確実性を可視化</strong>
+              <p>確率帯で可能性をわかりやすく表示</p>
+            </div>
+            <div>
+              <Scale size={26} />
+              <strong>反証シグナル搭載</strong>
+              <p>思い込みに気づき、視野を広げる</p>
+            </div>
+            <div>
+              <Footprints size={26} />
+              <strong>今日の一歩を提案</strong>
+              <p>小さな行動に絞った具体アクション</p>
+            </div>
+            <div>
+              <ShieldCheck size={26} />
+              <strong>安全に配慮した設計</strong>
+              <p>高リスク検知で支援先へつなぎます</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="about" className="domain-and-sample">
+          <div className="domain-panel luxe-panel">
+            <p className="mini-label">3 Domains</p>
+            <h2>3つの領域で、あなたの物語を読み解きます</h2>
+            <div className="domain-cards">
+              <article className="domain-card love">
+                <Heart size={34} />
+                <h3>恋愛</h3>
+                <p>関係性の悩みや未来の可能性をやさしく整理します。</p>
+              </article>
+              <article className="domain-card work">
+                <WalletCards size={34} />
+                <h3>仕事</h3>
+                <p>キャリアの選択や働き方の迷いに光をあてます。</p>
+              </article>
+              <article className="domain-card wellness">
+                <Flower2 size={34} />
+                <h3>ウェルネス</h3>
+                <p>心と体のバランスを整え、自分らしい毎日へ導きます。</p>
+              </article>
+            </div>
+          </div>
+
+          <div id="sample" className="sample-panel luxe-panel">
+            <p className="mini-label">Sample Result</p>
+            <h2>KIZASHIの診断結果イメージ</h2>
+            <div className="sample-scenarios">
+              {sampleResult.scenarios.map((scenario) => (
+                <div key={scenario.name} className={`sample-box sample-${scenario.name}`}>
+                  <span>{scenario.name}シナリオ</span>
+                  <strong>{scenario.probability_band}</strong>
+                  <small>{scenario.reading}</small>
+                </div>
+              ))}
+            </div>
+            <div className="sample-grid">
+              <div>
+                <strong>主要因子 TOP3</strong>
+                {sampleResult.factor_cards.map((factor, index) => (
+                  <p key={factor.factor}><span>0{index + 1}</span>{factor.factor}</p>
+                ))}
+              </div>
+              <div>
+                <strong>反証シグナル</strong>
+                <p>{sampleResult.counter_signal}</p>
+              </div>
+            </div>
+            <div className="sample-actions">
+              {sampleResult.next_actions.map((action) => <p key={action}><CheckCircle2 size={15} />{action}</p>)}
+            </div>
+          </div>
+        </section>
+
+        <section id="features" className="features-section luxe-panel">
+          <p className="mini-label centered">Core Features</p>
+          <h2>KIZASHIの主な機能</h2>
+          <div className="feature-grid">
+            {featureCards.map((item) => {
+              const Icon = item.icon;
+              return (
+                <article className="feature-card" key={item.title}>
+                  <Icon size={34} />
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="howto" className="flow-section">
+          <div className="luxe-panel promise-panel">
+            <p className="mini-label">Promise</p>
+            <h2>KIZASHIの大切な約束</h2>
+            <div className="promise-grid">
+              {promiseCards.map((promise) => <p key={promise}><Star size={18} />{promise}</p>)}
+            </div>
+          </div>
+          <div className="luxe-panel support-panel">
+            <p className="mini-label">Support</p>
+            <h2>困ったときの支援先</h2>
+            <p>つらい気持ちや不安が強いときは、診断よりも安全確保を優先してください。</p>
+            <a className="gold-button small" href="https://www.mhlw.go.jp/mamorouyokokoro/" target="_blank" rel="noreferrer">
+              相談窓口を見る <ArrowRight size={16} />
+            </a>
+          </div>
+        </section>
+
+        <section id="diagnosis" className="diagnosis-section">
+          <div className="diagnosis-left">
+            <InputForm onSubmit={handleAnalyze} />
+          </div>
+          <div id="result-area" className="diagnosis-right">
+            <ResultView result={result} />
+          </div>
+        </section>
+
+        <section id="pricing" className="pricing-section luxe-panel">
+          <p className="mini-label centered">Pricing</p>
+          <h2>料金プラン</h2>
+          <p className="section-copy">現在はMVP検証中です。将来的な有料化を想定し、選べる料金UIを実装しています。</p>
+          <div className="pricing-grid">
+            {pricing.map((plan) => (
+              <button
+                key={plan.name}
+                type="button"
+                className={`price-card ${selectedPlan === plan.name ? 'selected' : ''}`}
+                onClick={() => setSelectedPlan(plan.name)}
+              >
+                <span>{plan.name}</span>
+                <strong>{plan.price}</strong>
+                <p>{plan.body}</p>
+                <em>{selectedPlan === plan.name ? '選択中' : 'このプランを選ぶ'}</em>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="voice-and-cta">
+          <div className="luxe-panel voices-panel">
+            <p className="mini-label">Users Voice</p>
+            <h2>ユーザーの声</h2>
+            <div className="voice-grid">
+              {testimonials.map((voice) => (
+                <article key={voice.text}>
+                  <div className="stars">★★★★★</div>
+                  <p>{voice.text}</p>
+                  <span>{voice.age}</span>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className="final-cta luxe-panel">
+            <p className="mini-label">Start</p>
+            <h2>さあ、あなたの物語を始めましょう</h2>
+            <p>たった5つの質問で、あなたの今の迷いを3つの可能性に整理します。</p>
+            <a className="gold-button" href="#diagnosis">今すぐ無料で診断する <ArrowRight size={18} /></a>
+          </div>
+        </section>
+
+        <section id="faq" className="faq-section luxe-panel">
+          <p className="mini-label centered">FAQ</p>
+          <h2>よくある質問</h2>
+          <details>
+            <summary>KIZASHIは占いですか？</summary>
+            <p>占いの没入感を持ちながら、未来を断定しない自己省察型サービスです。</p>
+          </details>
+          <details>
+            <summary>診断結果は保存されますか？</summary>
+            <p>このMVPでは保存しません。正式版では同意を得た上で履歴保存機能を検討します。</p>
+          </details>
+          <details>
+            <summary>医療や法律の相談はできますか？</summary>
+            <p>できません。医療・法律・投資・採用などの専門判断は扱わず、必要時は専門窓口を優先します。</p>
+          </details>
+        </section>
       </main>
-      <footer className="footer">
+
+      <footer className="site-footer">
+        <div className="footer-icons">
+          <span>スマホ対応</span>
+          <span>登録不要</span>
+          <span>匿名OK</span>
+          <span>SSL暗号化</span>
+          <span>安心サポート</span>
+        </div>
         <p>© {year} KIZASHI｜確率叙事設計学 / 確率叙事占学</p>
-        <p>本MVPは自己理解と行動整理の補助を目的とした検証用プロダクトです。</p>
+        <p>本サービスは自己理解と行動整理の補助であり、未来・他者の意思・専門判断を断定するものではありません。</p>
       </footer>
     </div>
   );
